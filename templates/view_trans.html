@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block body %}
+<div class="container my-4">
+    {%if trans%}
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for i in trans%}
+            <tr>
+                <td>{{i.name}}</td>
+                <td>{{i.date}}</td>
+                {%if i.type == 'send' %}
+                <td style="color: red;">
+
+                    Rs.&nbsp;-{{i.amt}}
+                </td>
+                {%else%}
+                <td style="color: green;">
+
+                    Rs.&nbsp; +{{i.amt}}
+                </td>
+                {%endif%}
+                <td>{{i.desc}}</td>
+            </tr>
+            {%endfor%}
+
+        </tbody>
+    </table>
+    {%else%}
+    <h3 style="text-align: center;">No transactions to view</h3>
+    {%endif%}
+</div>
+{% endblock body %}

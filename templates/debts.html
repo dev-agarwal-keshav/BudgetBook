@@ -1,0 +1,93 @@
+{% extends 'base.html' %} {% block body %}
+<div class="container my-4">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+ Received a Debt
+</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Received a Debt</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/debt_save" method="POST">{%csrf_token%}
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="debt_name" placeholder="Paid to" name="debt_name">
+                            <label for="debt_name">To pay</label>
+                        </div>
+                        <div class='form-floating mb-3'>
+                            <input type="number" class="form-control" id="debt_amt" placeholder="Paid Amount" name="debt_amt">
+                            <label for="debt_amt"> Paid Amount </label>
+                        </div>
+                        <div class="mb-3">
+                            <input type="date" class="form-control" id="date" placeholder="Date" name="date" required>
+                        </div>
+                        <button class="btn btn-danger" type="submit">Save</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {%if debts%}
+    <div class="mb-3" style="text-align: center; border:1px black solid; padding:20px;">
+        <h1>Total Amount to be {%if total > 0 %} received: Rs.&nbsp;{{total}} {%else%} sent :Rs.&nbsp;{{total}} {%endif%}
+        </h1>
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th scope="col">Name</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in debts%}
+                <tr>
+                    <td>{{i.name}}</td>
+                    <td>{{i.date}}</td>
+                    <td> {%if i.amt > 0 %}
+                        <span style="color: green;">Rs. &nbsp;{{i.amt}}</span>{%else%}
+                        <span style="color:red;">Rs. &nbsp;{{i.amt}}</span> {%endif%}
+
+                    </td>
+                    {%if i.paid%}
+                    <td>
+                        <i class="fa fa-check-circle" style="font-size:24px; color:green;"></i>
+                    </td>
+                    {%else%}
+                    <td>
+                        <form action="/paid/{{i.id}}" method="POST" id="form{{i.id}}">{%csrf_token%}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="type" id="inlineRadio1{{i.id}}" value="cash">
+                                <label class="form-check-label" for="inlineRadio1">Cash</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="type" id="inlineRadio2{{i.id}}" value="acc">
+                                <label class="form-check-label" for="inlineRadio2">Account</label>
+                            </div>
+                            <button type="submit" class="btn btn-success">Paid</button>
+                        </form>
+
+                    </td>
+                    {% endif %}
+                </tr>
+                {%endfor%}
+
+            </tbody>
+        </table>
+    </div>
+    {%else%}
+    <h3 style="text-align: center;">No debts to view</h3>
+    {%endif%}
+</div>
+{% endblock body %}

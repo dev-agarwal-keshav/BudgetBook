@@ -1,0 +1,62 @@
+{% extends 'base.html' %} {% block body %}
+<div class="container my-4">
+    <div class="col-md-8 offset-md-2">
+        <form action="/cash_trans" method="POST">{%csrf_token%}
+            <fieldset style="border: 1px black solid; padding:20px;">
+                <h2 style="text-align:center">Cash Transaction</h2>
+                <div class="form-floating mb-3 col-md-6">
+                    <input type="text" class="form-control" id="name" placeholder="Paid to" name="name" required>
+                    <label for="name">Paid to</label>
+                </div>
+
+                <div class="form-floating mb-3 col-md-3">
+                    <input type="number" class="form-control" id="amt" placeholder="Paid Amount" name="amt" required>
+                    <label for="amt">Paid Amount</label>
+                </div>
+                <div class="row mb-3">
+                    <div class=" col-md-3">
+                        <input type="date" class="form-control" id="date" placeholder="Date" name="date" required>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="inlineRadio1{{i.id}}" value="send" required>
+                            <label class="form-check-label" for="inlineRadio1{{i.id}}">Sent</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="type" id="inlineRadio2{{i.id}}" value="recv" required>
+                            <label class="form-check-label" for="inlineRadio2{{i.id}}">Received</label>
+                        </div>
+                    </div>
+                </div>
+                <textarea class="form-control mb-3" name="desc" id="desc" cols="30" rows="3" placeholder="Description"></textarea>
+                <div id="debtor">
+
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="yes" id="debt" name="debt" onclick="add()">
+                    <label class="form-check-label" for="debt">
+                      Debt
+                    </label>
+                </div>
+                <button class="btn btn-success" type="submit">Save</button>
+            </fieldset>
+        </form>
+    </div>
+</div>
+{%endblock%} {%block js%}
+<script>
+    function add() {
+
+        var new_input = `<h3 style="text-align:center;">Debt</h3>
+        <div class="form-floating mb-3 col-md-6">
+            <input type="text" class="form-control" id="debt_name" placeholder="Paid to" name="debt_name">
+            <label for="debt_name">Paid for</label>
+        </div>
+        <div class='form-floating mb-3 col-md-3 '> 
+            <input type = "number" class = "form-control" id = "debt_amt" placeholder = "Paid Amount" name = "debt_amt" > 
+            <label for = "debt_amt"> Paid Amount </label> 
+        </div> `
+        document.getElementById("debtor").innerHTML=new_input;
+
+    }
+</script> {%endblock%}
